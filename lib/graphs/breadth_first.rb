@@ -1,36 +1,51 @@
 require 'graphs/graph'
 
 module Graphs
-  class DepthFirstSearch
+  class BreadthFirstSearch
     def initialize(graph)
-      @graph = Structures::Graph.new(graph)
+      @graph = Graph.new(graph)
     end
 
     def routes(start, finish)
-      stack = [start]
-      count = 0
+      queue   = [start]
+      count   = 0
+
       loop do
-        curr = stack.pop
-        break      if curr == nil
+        curr = queue.pop
+        break if curr == nil
         count += 1 if curr == finish
-        stack = stack + @graph.adjacent(curr)
+        queue = @graph.adjacent( curr ) + queue
+      end
+      count
+    end
+
+    def route?(start, finish)
+      queue   = [start]
+
+      loop do
+        curr = queue.pop
+        return false if curr == nil
+        return true  if curr == finish
+        queue = @graph.adjacent( curr ) + queue
       end
       count
     end
 
     def shortest(start, finish)
-      stack = [start]
+      queue   = [start]
+      count   = 0
       visited = []
-      paths = []
+      paths   = []
+
       loop do
-        curr = stack.pop
+        curr = queue.pop
         visited << curr
         break if curr == nil
         if curr == finish
           paths << visited
           visited = []
         end
-        stack = stack + @graph.adjacent(curr)
+        queue = @graph.adjacent( curr ) + queue
       end
 
       costs = []
@@ -44,18 +59,6 @@ module Graphs
         costs << struct
       end
       costs
-
-    end
-
-    def route?(start, finish)
-      stack = [start]
-      loop do
-        curr = stack.pop
-        return false  if curr == nil
-        return true   if curr == finish
-        stack = stack + @graph.adjacent(curr)
-      end
-      count
     end
 
   end

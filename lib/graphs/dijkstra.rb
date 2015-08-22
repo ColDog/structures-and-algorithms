@@ -1,4 +1,4 @@
-require 'graphs/graph.rb'
+require 'graphs/graph'
 
 module Graphs
   class Dijkstra
