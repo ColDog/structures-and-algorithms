@@ -10,6 +10,26 @@ module Graphs
       @path   = []
     end
 
+    def solve
+      # begin with the node denoted from the graphs table
+      # and mark this node as solved
+      current = @graph.nodes[@start]
+      current.solved = true
+
+      loop do
+        puts "current: #{current.idx}, current_cost: #{current.cost}"
+        # step 1: identify all unsolved nodes
+        # step 2: calculate the cost to get to unsolved nodes from every solved node.
+        # step 3: move to the lowest cost node.
+        current = lowest_cost_node
+        current.solved = true
+        @path << current.idx
+
+        return self if current.idx == @target
+      end
+    end
+
+    private
     def calculate_cost(solved, unsolved_node)
       unsolved_node.cost = @graph.cost(solved.idx, unsolved_node.idx) + solved.cost
     end
@@ -28,25 +48,6 @@ module Graphs
         end
       end
       lowest_cost_node
-    end
-
-    def solve
-      # begin with the node denoted from the graphs table
-      # and mark this node as solved
-      current = @graph.nodes[@start]
-      current.solved = true
-
-      loop do
-        puts "current: #{current.idx}, current_cost: #{current.cost}"
-        # step 1: identify all unsolved nodes
-        # step 2: calculate the cost to get to unsolved nodes from every solved node.
-        # step 3: move to the lowest cost node.
-        current = lowest_cost_node
-        current.solved = true
-        @path << current.idx
-
-        return self if current.idx == @target
-      end
     end
 
   end
