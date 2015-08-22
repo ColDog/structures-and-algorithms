@@ -1,9 +1,8 @@
-module LinkedList
+module LinkedLists
   class Node
-    def initialize(data, nextv = nil, previ = nil)
+    def initialize(data, nex = nil)
       @data = data
-      @next = nextv
-      @prev = previ
+      @nex = nex
     end
   end
 end
