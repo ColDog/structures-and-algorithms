@@ -1,88 +1,136 @@
 # require 'test_simple'
 
-class AdjacencyMatrix
-  attr_accessor :stack, :adj, :loc, :start, :target
+# require 'structures/queue'
+# require 'structures/stack'
 
-  def initialize(matrix = [[]])
-    @adj    = matrix
-    @verts  = {}
-  end
+module Structures
 
-  def add_vertice(loc = @adj.length, name = nil)
-    @verts[name] = loc if name
-    @adj.insert(loc, [])
-    i = 0
-    while i < @adj.length
-      @adj[i].insert(loc, [])
+  class Queue < Array
+    def enqueue(args)
+      push(args)
     end
-    self
-  end
-
-  def add_edge(r,c)
-    @adj[r][c] = 1
-    true
-  end
-
-  def remove_edge(r,c)
-    @adj[r][c] = 0
-    true
-  end
-
-  def go_to?(vertice)
-    @adj[@loc][vertice]
-  end
-
-  def vertices
-    (0..@adj.length - 1).to_a
-  end
-
-  def find_vertice(name)
-    @verts[name]
-  end
-
-  def children(loc)
-    vertices.select {  |v| @adj[loc][v] == 1 }
-  end
-
-  def add_children_to_stack
-    @stack = @stack + children
-  end
-
-  def depth_first_search(source, target)
-    stack = [source]
-    loop do
-      curr = stack.pop
-      return false if curr.nil?
-      return true  if curr == target
-      puts "#{children(curr)}"
-
-      @stack = stack + children(curr)
+    def dequeue
+      shift
     end
   end
 
-  def breadth_first_search(source, target)
-    queue = [source]
-    loop do
-      curr = queue.pop
-      return false if curr.nil?
-      return true  if curr == target
-      puts "#{children(curr)}"
+  class Stack < Array
+  end
+end
 
-      @stack = children(curr) + queue
+module Graph
+  class Adjacency
+    attr_accessor :matrix
+    def initialize(matrix = [])
+      @matrix = matrix
     end
+
+    def vertices
+      (0..@matrix.length - 1).to_a
+    end
+
+    def adjacent(loc)
+      @matrix[loc].each_index.select{ |i| @matrix[loc][i] > 0 }
+    end
+
+  end
+end
+
+
+def dfs
+  graph = Graph::Adjacency.new [
+    [0, 0, 1, 1, 1, 1],
+    [1, 0, 1, 1, 1, 1],
+    [1, 0, 1, 1, 1, 1],
+    [1, 1, 0, 1, 1, 1],
+    [1, 1, 0, 0, 1, 1],
+    [1, 1, 1, 1, 0, 1],
+    [1, 1, 0, 1, 1, 0]
+  ]
+  stack   = Structures::Stack.new
+  vertex  = 0
+  results = []
+  visited = []
+
+  stack.push vertex
+  visited << vertex
+  results << vertex
+  loop do
+    break if stack.empty?
+    candid = graph.adjacent( stack.first ) - visited
+    if candid.any?
+      nex = candid.first
+      stack.push nex
+      visited << nex
+      results << nex
+    else
+      stack.pop
+    end
+    puts "stack: #{stack}, next: #{candid.first}, candid: #{candid}, results: #{results}"
   end
 
 end
 
-adj_maxtrix1 = [
-  [0, 0, 1, 0, 1, 0],
-  [0, 0, 1, 0, 0, 1],
-  [0, 0, 0, 1, 0, 0],
-  [0, 0, 0, 0, 1, 1],
-  [0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0]
-]
+# how many possible paths from a to e?
+def routes
+  graph = Graph::Adjacency.new
+  graph.matrix = [
+    [0,1,0,0,1],
+    [0,0,1,0,0],
+    [0,0,0,1,0],
+    [0,0,0,0,1],
+    [0,0,0,0,0]
+  ]
+  stack   = Structures::Stack.new
+  vertex  = 0
+  paths   = 0
+  visited = []
 
-matrix = AdjacencyMatrix.new(adj_maxtrix1)
-puts matrix.depth_first_search(0,5)
-puts matrix.breadth_first_search(0,5)
+  stack.push vertex
+  visited << vertex
+  loop do
+    puts "#{stack}"
+    paths += 1 if stack.first == 5
+    break if stack.empty?
+    candid = graph.adjacent(stack.first) - visited
+    if candid.any?
+      stack.push candid.first
+      visited << candid.first
+    else
+      stack.pop
+    end
+  end
+  return paths
+end
+
+puts 'routes with depth first'
+puts routes
+
+
+def bfs
+  graph = Graph::Adjacency.new [
+    [0, 0, 1, 1, 1, 1],
+    [1, 0, 1, 1, 1, 1],
+    [1, 0, 1, 1, 1, 1],
+    [1, 1, 0, 1, 1, 1],
+    [1, 1, 0, 0, 1, 1],
+    [1, 1, 1, 1, 0, 1],
+    [1, 1, 0, 1, 1, 0]
+  ]
+  queue   = []
+  curr    = 0
+  results = []
+  visited = []
+
+  loop do
+    puts "curr: #{curr}, queue: #{queue}, next: #{queue.first}, results: #{results}, adjacent: #{graph.adjacent( curr )}"
+
+    add = graph.adjacent( curr ) - visited
+
+    queue.push(*add)
+    visited.push(*add)
+    curr    = queue.shift
+    break if queue.empty?
+  end
+
+end
