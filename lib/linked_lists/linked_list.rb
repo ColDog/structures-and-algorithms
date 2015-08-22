@@ -3,7 +3,6 @@ require 'linked_lists/node'
 module LinkedLists
   class Single
     include Enumerable
-    attr_accessor :first, :last, :list
     def initialize
       @list   = []
       @first  = nil
@@ -12,17 +11,17 @@ module LinkedLists
 
     def <<(data)
       node      =  Node.new(data, nil, last_idx)
-      @last.nex =  node.idx if @last
-      @first    =  node     if @first.nil?
-      @last     =  node
+      @list[@last].nex =  node.idx if @last
+      @first    =  node.idx if @first.nil?
+      @last     =  node.idx
       @list     << node
     end
 
     def insert(data)
-      nex    = @first ? @first.idx : nil
+      nex    = @first ? @list[@first].idx : nil
       node   = Node.new(data, nex, last_idx)
-      @first = node
-      @last  =  node if @last.nil?
+      @first = node.idx
+      @last  = node.idx if @last.nil?
       @list << node
     end
 
@@ -53,6 +52,14 @@ module LinkedLists
 
     def empty?
       @list.empty?
+    end
+
+    def first
+      @list[@first]
+    end
+
+    def last
+      @list[@last]
     end
 
     private

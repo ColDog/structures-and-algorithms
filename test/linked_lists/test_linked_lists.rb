@@ -18,5 +18,4 @@ class LinkedListsTest < Minitest::Test
     assert_equal 2, list.first.data
     assert_equal 1, list.last.data
   end
-
 end
