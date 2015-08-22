@@ -1,8 +1,10 @@
 module LinkedLists
   class Node
-    def initialize(data, nex = nil)
+    attr_accessor :nex, :data, :idx
+    def initialize(data, nex = nil, idx = nil)
       @data = data
-      @nex = nex
+      @nex  = nex
+      @idx  = idx
     end
   end
 end

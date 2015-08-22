@@ -17,7 +17,6 @@ module Graphs
       current.solved = true
 
       loop do
-        puts "current: #{current.idx}, current_cost: #{current.cost}"
         # step 1: identify all unsolved nodes
         # step 2: calculate the cost to get to unsolved nodes from every solved node.
         # step 3: move to the lowest cost node.
