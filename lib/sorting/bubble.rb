@@ -5,17 +5,19 @@ class Array
       swapped = false
 
       i = 0
-      while i < self.length
+      while i < (self.length - 1)
+        top = self[i + 1]
+        bot = self[i]
 
-        if self[i] > self[i + 1]
-          self[i], self[i + 1] = self[i + 1], self[i]
+        if bot > top
+          self[i], self[i + 1] = top, bot
           swapped = true
         end
 
         i += 1
       end
 
-      break if swapped = false
+      break if swapped == false
     end
 
     self
