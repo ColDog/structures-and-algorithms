@@ -30,10 +30,10 @@ class DepthFirstTest < Minitest::Test
     assert_equal [0,1,2,3,4,5], graph.breadth_first_traversal(0).sort
   end
 
-  def test_all_possible
-    graph = Graphs::Graph.new(@matrix)
-    graph.all_paths(0,5)
-  end
+  # def test_all_possible
+  #   graph = Graphs::Graph.new(@matrix)
+  #   graph.all_paths(0,5)
+  # end
 
 
 end
