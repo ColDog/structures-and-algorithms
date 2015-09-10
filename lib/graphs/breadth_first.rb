@@ -1,64 +1,39 @@
 require 'graphs/graph'
 
 module Graphs
-  class BreadthFirstSearch
-    def initialize(graph)
-      @graph = Graph.new(graph)
-    end
+  module BreadthFirst
 
-    def routes(start, finish)
-      queue   = [start]
-      count   = 0
-
-      loop do
-        curr = queue.pop
-        break if curr == nil
-        count += 1 if curr == finish
-        queue = @graph.adjacent( curr ) + queue
-      end
-      count
-    end
-
-    def route?(start, finish)
-      queue   = [start]
-
-      loop do
-        curr = queue.pop
-        return false if curr == nil
-        return true  if curr == finish
-        queue = @graph.adjacent( curr ) + queue
-      end
-      count
-    end
-
-    def shortest(start, finish)
-      queue   = [start]
-      count   = 0
+    def breadth_first_traversal(start)
+      queue   = [self.nodes[start]]
       visited = []
+      loop do
+        current = queue.pop
+        visited << current if current
+        break if current.nil?
+        queue = (self.adjacent(current.idx) - visited) + queue
+      end
+      visited.map { |n| n.idx }
+    end
+
+    def all_paths(start, target)
       paths   = []
+      visited = []
+      queue   = [self.nodes[start]]
+      path    = []
 
       loop do
-        curr = queue.pop
-        visited << curr
-        break if curr == nil
-        if curr == finish
-          paths << visited
-          visited = []
+        current = queue.pop
+        visited << current if current
+        if current.nil?
+          visited, path = []
+          queue = [self.nodes[start]]
+        elsif paths.match current path
+          visited, path = []
+          queue = [self.nodes[start]]
+        else
+          queue = (self.adjacent(current.idx) - visited) + queue
         end
-        queue = @graph.adjacent( curr ) + queue
       end
-
-      costs = []
-      paths.each do |path|
-        struct = Path.new(0, path)
-        i = 0
-        while i < path.length - 1
-          struct.cost += @graph.cost(i,i + 1)
-          i += 1
-        end
-        costs << struct
-      end
-      costs
     end
 
   end

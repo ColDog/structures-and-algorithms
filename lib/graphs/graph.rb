@@ -1,3 +1,6 @@
+require 'graphs/depth_first'
+require 'graphs/breadth_first'
+
 module Graphs
   class Node
     attr_accessor :from, :cost, :solved, :name, :idx
@@ -18,6 +21,9 @@ module Graphs
 
   class Graph
     attr_accessor :matrix, :nodes
+
+    include DepthFirst
+    include BreadthFirst
 
     def initialize(matrix = [], names = [])
       @matrix = matrix

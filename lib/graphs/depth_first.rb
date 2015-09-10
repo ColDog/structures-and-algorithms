@@ -1,25 +1,19 @@
 require 'graphs/graph'
 
 module Graphs
-  class DepthFirstSearch
-    def initialize(graph, start, target)
-      @graph  = Graph.new(graph)
-      @start  = @graph.nodes[start]
-      @target = @graph.nodes[target]
-      @path   = []
-    end
+  module DepthFirst
 
-    def solve
-      stack = [start]
+    def depth_first_traversal(start)
+      stack   = [self.nodes[start]]
+      visited = []
       loop do
         current = stack.pop
-        break if current.idx == @target
-        stack = stack + @graph.adjacent(current.idx)
-        puts "#{stack}"
+        visited << current if current
+        break if current.nil?
+        stack = stack + (self.adjacent(current.idx) - visited)
       end
-
+      visited.map { |n| n.idx }
     end
-
 
   end
 end
